@@ -21,8 +21,8 @@ mySQLConfig = {
 
 cognitoPoolID = 'us-east-2_4NELA3imh'
 cognitoAppClient = '3kl9bhn4bst09fbpo3mc2s3mo6'
-cognitoAccessKey = 'AKIA2VGGOTNNR26EU3XB'
-cognitoSecretyKey = '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'
+IAMAccessKey = 'AKIA2VGGOTNNR26EU3XB'
+IAMSecretyKey = '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'
 
 HEADER = {'Access-Control-Allow-Origin': '*'}
 
@@ -49,8 +49,8 @@ def signUpProcess():
 
 	if username and email and password:
 		printf ("Creating object for " + username)
-		u = Cognito(cognitoPoolID,cognitoAppClient, access_key=cognitoAccessKey, 
-			secret_key=cognitoSecretyKey)
+		u = Cognito(cognitoPoolID,cognitoAppClient, access_key=IAMAccessKey, 
+			secret_key=IAMSecretyKey)
 
 		printf ("Cognito object created, trying to add user")
 		u.add_base_attributes(email=email)
