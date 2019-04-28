@@ -10,7 +10,7 @@
 
 **Step 3: Launch the virtual environment** 
 
-*Virtual environment is optional, but I have added it so that your copy of Python is not messed up with new libraries*
+*Virtual environment is optional, but I have added it so that the copy of Python in your machine is not affected*
 
 On Windows: `.\venv\Scripts\activate`
 
