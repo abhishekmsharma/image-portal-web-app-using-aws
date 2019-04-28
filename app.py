@@ -52,15 +52,15 @@ def signUpProcess():
 		u = Cognito(cognitoPoolID,cognitoAppClient, access_key=cognitoAccessKey, 
 			secret_key=cognitoSecretyKey)
 
-		printf ("Cognito object created")
+		printf ("Cognito object created, trying to add user")
 		u.add_base_attributes(email=email)
 		try:
 			u.register(username, password)
 			values['success'] = "Account created for user " + username
-			print ("Returning", values, file=sys.stderr)
+			printf ("Returning " + str(values))
 			return jsonify(values)
 		except Exception as e:
-			print ("Signup failed, Error:", e, file=sys.stderr)
+			printf ("Signup failed, Error: " +  str(e))
 			values['error'] = str(e)
 			return jsonify(values)
 
