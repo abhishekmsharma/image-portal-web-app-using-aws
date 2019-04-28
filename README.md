@@ -1,6 +1,10 @@
 
 **Steps to run**
 
+** Step 0: (Only required for Windows**
+
+	Download Visual CPP Build Tools: https://download.microsoft.com/download/5/f/7/5f7acaeb-8363-451f-9425-68a90f98b238/visualcppbuildtools_full.exe
+
 **Step 1: Clone the git repo**
 
     git clone https://github.com/abhishekmsharma/cs218-imageportal
