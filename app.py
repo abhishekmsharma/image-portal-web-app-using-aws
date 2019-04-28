@@ -32,7 +32,7 @@ def printf(s):
 @app.route('/')
 def index():
 	printf ('In Home')
-	return render_template('signup.html')
+	return render_template('login.html')
 
 @app.route('/signup', methods=['GET'])
 def signUpPage():
@@ -68,6 +68,29 @@ def signUpProcess():
 	printf ("Returning " + values)
 	values['error'] = 'Please enter all the fields'
 	return jsonify(values)
+
+@app.route('/login', methods=['GET'])
+def loginPage():
+	return render_template('login.html')
+
+@app.route('/login', methods=['POST'])
+def loginProcess():
+	printf("In login process")
+	values = dict()
+	username = request.form['username']
+	password = request.form['password']
+	printf("Username: " + username)
+	u = Cognito(cognitoPoolID,cognitoAppClient, username=username)
+	try:
+		t = u.authenticate(password = password)
+		printf("---------Authenticated-------------")
+		values['success'] = "Logged in as " + username
+		printf("ID_Token: " + u.id_token)
+		return jsonify(values)
+	except Exception as e:
+		printf (e)
+		values['error'] = str(e)
+		return jsonify(values)
 
 @app.route('/check-status', methods=['GET'])
 def verify():
