@@ -11,7 +11,7 @@ mySQLConfig = {
 	  'user': 'abhishek',
 	  'password': '0000',
 	  'host': '127.0.0.1',
-	  'database': 'world',
+	  'database': 'cs218imageportal_db',
 	  'raise_on_warnings': True
 	}
 
@@ -113,11 +113,9 @@ def process():
 
 @app.route('/users', methods=['GET'])
 def getUsers():
-	config = {'user': 'abhishek','password': '0000', 'host': '127.0.0.1','database': 'cs218imageportal', 
-	'raise_on_warnings': True}
 
 	try:
-		cnx = mysql.connector.connect(**config)
+		cnx = mysql.connector.connect(**mySQLConfig)
 		cursor = cnx.cursor()
 
 	except mysql.connector.Error as err:
