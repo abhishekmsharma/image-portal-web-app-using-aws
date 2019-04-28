@@ -1,6 +1,6 @@
 Prior to first run, install the requirements:
 
-**pip install requirements.txt**
+**pip install -r requirements.txt**
 
 Run the below command before running the Python program:
 
