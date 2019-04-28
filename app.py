@@ -4,10 +4,13 @@ import sys
 import json
 import mysql.connector
 from mysql.connector import errorcode
+import os
 
 app = Flask(__name__)
 
 # all configurations
+os.environ['AWS_DEFAULT_REGION'] = "us-east-2"
+
 mySQLConfig = {
 	  'user': 'abhishek',
 	  'password': '0000',
@@ -23,9 +26,12 @@ cognitoSecretyKey = 'p0O7ag4HBJfF3WFOxmkvviVrcVZWJDJZxC8lw3Ka'
 
 HEADER = {'Access-Control-Allow-Origin': '*'}
 
+def printf(s):
+	print(s, file=sys.stderr)
+
 @app.route('/')
 def index():
-	#print('in Home',username, file=sys.stderr)
+	printf ('In Home')
 	return render_template('signup.html')
 
 @app.route('/signup', methods=['GET'])
@@ -34,7 +40,7 @@ def signUpPage():
 
 @app.route('/signup', methods=['POST'])
 def signUpProcess():
-	print ("In signup process", file=sys.stderr)
+	printf ("In signup process")
 	values = dict()
 	email = request.form['email']
 	username = request.form['username']
@@ -42,12 +48,11 @@ def signUpProcess():
 	print (username, email, password, file=sys.stderr)
 
 	if username and email and password:
-		print ("In if", file=sys.stderr)
-		print ("Creating object")
+		printf ("Creating object for " + username)
 		u = Cognito(cognitoPoolID,cognitoAppClient, access_key=cognitoAccessKey, 
 			secret_key=cognitoSecretyKey)
 
-		print ("here", file=sys.stderr)
+		printf ("Cognito object created")
 		u.add_base_attributes(email=email)
 		try:
 			u.register(username, password)
@@ -60,7 +65,7 @@ def signUpProcess():
 			return jsonify(values)
 
 
-	print ("Returning", values, file=sys.stderr)
+	printf ("Returning " + values)
 	values['error'] = 'Please enter all the fields'
 	return jsonify(values)
 
@@ -121,11 +126,11 @@ def getUsers():
 
 	except mysql.connector.Error as err:
 		if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-			print("Invalid credentials")
+			printf("Invalid credentials")
 		elif err.errno == errorcode.ER_BAD_DB_ERROR:
-			print("Database does not exist")
+			printf("Database does not exist")
 		else:
-			print(err)
+			printf(err)
 		cnx.close()
 
 	query = ("SELECT name,email FROM users")
