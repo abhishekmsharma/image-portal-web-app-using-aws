@@ -3,3 +3,4 @@ Flask==1.0.2
 boto==2.49.0
 boto3==1.9.137
 botocore==1.12.137
+warrant==0.6.1

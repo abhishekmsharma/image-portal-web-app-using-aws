@@ -1,4 +1,5 @@
 from flask import Flask, request, Response, render_template, jsonify
+from warrant import Cognito
 import sys
 import json
 import mysql.connector
@@ -15,10 +16,10 @@ mySQLConfig = {
 	  'raise_on_warnings': True
 	}
 
-cognitoPoolID = 'us-east-2_VJYF5RLsG'
-cognitoAppClient = '3htbuu4os6j3j85hb8djd2um7h'
-cognitoAccessKey = 'AKIA2VGGOTNNZITE4BX3'
-cognitoSecretyKey = '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'
+cognitoPoolID = 'us-east-2_4NELA3imh'
+cognitoAppClient = '3kl9bhn4bst09fbpo3mc2s3mo6'
+cognitoAccessKey = 'AKIA2VGGOTNNR26EU3XB'
+cognitoSecretyKey = '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'
 
 HEADER = {'Access-Control-Allow-Origin': '*'}
 
@@ -42,11 +43,11 @@ def signUpProcess():
 
 	if username and email and password:
 		print ("In if", file=sys.stderr)
-		from warrant import Cognito
-
+		print ("Creating object")
 		u = Cognito(cognitoPoolID,cognitoAppClient, access_key=cognitoAccessKey, 
 			secret_key=cognitoSecretyKey)
 
+		print ("here", file=sys.stderr)
 		u.add_base_attributes(email=email)
 		try:
 			u.register(username, password)
@@ -67,49 +68,49 @@ def signUpProcess():
 def verify():
 	return 'service is up'
 	
-@app.route('/welcome/<string:username>', methods=['GET'])
-def welcome(username):
-	print('in Welcome',username, file=sys.stderr)
-	values = {"Browser":"Chrome", "Names":username}
-	return jsonify(values)
+# @app.route('/welcome/<string:username>', methods=['GET'])
+# def welcome(username):
+# 	print('in Welcome',username, file=sys.stderr)
+# 	values = {"Browser":"Chrome", "Names":username}
+# 	return jsonify(values)
 	
-@app.route('/welcome/add/<int:a>', methods=['POST'])
-def addNumbers():
-	a = request.args.get('a', 0, type=int)
-	b = request.args.get('a', 0, type=int)
-	c = a+b
-	print ("Sum is ",c, file=sys.stderr)
-	values = {"result": c}
-	return json.dumps(values)
+# @app.route('/welcome/add/<int:a>', methods=['POST'])
+# def addNumbers():
+# 	a = request.args.get('a', 0, type=int)
+# 	b = request.args.get('a', 0, type=int)
+# 	c = a+b
+# 	print ("Sum is ",c, file=sys.stderr)
+# 	values = {"result": c}
+# 	return json.dumps(values)
 
-@app.route('/welcome/add/<int:a>', methods=['GET'])
-def addSelfNumbers(a):
-	c = a + a
-	print ("Sum is ",c, file=sys.stderr)
-	values = {"sum": c}
-	response = app.response_class(response=json.dumps(values),
-                                  status=200,
-                                  mimetype='application/json')
-	return response
+# @app.route('/welcome/add/<int:a>', methods=['GET'])
+# def addSelfNumbers(a):
+# 	c = a + a
+# 	print ("Sum is ",c, file=sys.stderr)
+# 	values = {"sum": c}
+# 	response = app.response_class(response=json.dumps(values),
+#                                   status=200,
+#                                   mimetype='application/json')
+# 	return response
 	
-@app.route('/process', methods=['POST'])
-def process():
+# @app.route('/process', methods=['POST'])
+# def process():
 
-	values = dict()
-	email = request.form['email']
-	name = request.form['name']
+# 	values = dict()
+# 	email = request.form['email']
+# 	name = request.form['name']
 
-	if name and email:
-		newName = name[::-1]
-		values['name'] = newName
-		print ("Returning", values, file=sys.stderr)
-		#return json.dumps(values)
-		return jsonify(values)
+# 	if name and email:
+# 		newName = name[::-1]
+# 		values['name'] = newName
+# 		print ("Returning", values, file=sys.stderr)
+# 		#return json.dumps(values)
+# 		return jsonify(values)
 
-	print ("Returning", values, file=sys.stderr)
-	values['error'] = 'Missing data!'
-	return jsonify({'error' : 'Missing data!'})
-	return json.dumps(values)
+# 	print ("Returning", values, file=sys.stderr)
+# 	values['error'] = 'Missing data!'
+# 	return jsonify({'error' : 'Missing data!'})
+# 	return json.dumps(values)
 
 @app.route('/users', methods=['GET'])
 def getUsers():
@@ -140,36 +141,34 @@ def getUsers():
                                   mimetype='application/json')
 	return response
 	
-@app.route('/getCities', methods=['GET'])
-def getCities():
-	import mysql.connector
-	from mysql.connector import errorcode
+# @app.route('/getCities', methods=['GET'])
+# def getCities():
+# 	import mysql.connector
+# 	from mysql.connector import errorcode
 
-	try:
-	  cnx = mysql.connector.connect(**mySQLConfig)
-	  cursor = cnx.cursor()
+# 	try:
+# 	  cnx = mysql.connector.connect(**mySQLConfig)
+# 	  cursor = cnx.cursor()
 
-	except mysql.connector.Error as err:
-	  if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-	    print("Something is wrong with your user name or password")
-	  elif err.errno == errorcode.ER_BAD_DB_ERROR:
-	    print("Database does not exist")
-	  else:
-	    print(err)
-	  cnx.close()
-
-
-	query = ("SELECT Name, CountryCode FROM city")
-
-	cursor.execute(query)
-
-	values = dict()
+# 	except mysql.connector.Error as err:
+# 	  if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+# 	    print("Something is wrong with your user name or password")
+# 	  elif err.errno == errorcode.ER_BAD_DB_ERROR:
+# 	    print("Database does not exist")
+# 	  else:
+# 	    print(err)
+# 	  cnx.close()
 
 
-	for Name, CountryCode in cursor:
-		values[Name] = CountryCode
+# 	query = ("SELECT Name, CountryCode FROM city")
 
-	return jsonify(values)
+# 	cursor.execute(query)
+# 	values = dict()
+
+# 	for Name, CountryCode in cursor:
+# 		values[Name] = CountryCode
+
+# 	return jsonify(values)
 
 if __name__ == '__main__':
 	app.run(port='319', debug=True)
