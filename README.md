@@ -1,3 +1,4 @@
+
 **Steps to run**
 
 **Step 1: Clone the git repo**
@@ -8,13 +9,9 @@
 
     cd cs218-imageportal
 
-**Step 3: Launch the virtual environment** 
+**Step 3: Install the requirements** 
 
-*Virtual environment is optional, but I have added it so that the copy of Python in your machine is not affected*
-
-On Windows: `.\venv\Scripts\activate`
-
-On Mac/Linux/Bash: `source venv/Scripts/activate`
+    pip install -r requirements.txt
 
 **Step 4: Set AWS Default Region**
 
