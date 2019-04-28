@@ -1,4 +1,4 @@
-from flask import Flask, request, Response, render_template, jsonify
+from flask import Flask, request, Response, render_template, jsonify, redirect, url_for
 from warrant import Cognito
 import sys
 import json
@@ -56,7 +56,8 @@ def signUpProcess():
 		u.add_base_attributes(email=email)
 		try:
 			u.register(username, password)
-			values['success'] = "Account created for user " + username
+			values['success'] = "Account created for user " + username \
+			+ ". Click on the link below to verify your email."
 			printf ("Returning " + str(values))
 			return jsonify(values)
 		except Exception as e:
@@ -82,10 +83,31 @@ def loginProcess():
 	printf("Username: " + username)
 	u = Cognito(cognitoPoolID,cognitoAppClient, username=username)
 	try:
-		t = u.authenticate(password = password)
+		u.authenticate(password = password)
 		printf("---------Authenticated-------------")
 		values['success'] = "Logged in as " + username
 		printf("ID_Token: " + u.id_token)
+		return jsonify(values)
+	except Exception as e:
+		printf (e)
+		values['error'] = str(e)
+		return jsonify(values)
+
+@app.route('/confirmUser')
+def confirmUser():
+	return render_template('confirmUser.html')
+
+@app.route('/confirmUser', methods=['POST'])
+def confirmUserProcess():
+	printf("In confirm process")
+	values = dict()
+	username = request.form['username']
+	code = request.form['code']
+	u = Cognito(cognitoPoolID, cognitoAppClient)
+	try:
+		u.confirm_sign_up(code,username=username)
+		printf("--------VERIFIED-----------")
+		values['success'] = "Your account is verified, you can now log in"
 		return jsonify(values)
 	except Exception as e:
 		printf (e)
