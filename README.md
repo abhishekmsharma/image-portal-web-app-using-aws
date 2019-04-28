@@ -9,6 +9,7 @@
     cd cs218-imageportal
 
 **Step 3: Launch the virtual environment** 
+
 *Virtual environment is optional, but I have added it so that your copy of Python is not messed up with new libraries*
 
 On Windows: `.\venv\Scripts\activate`
