@@ -10,13 +10,13 @@
 
 **Step 3: Launch the virtual environment** 
 *Virtual environment is optional, but I have added it so that your copy of Python is not messed up with new libraries*
-On Windows: `.\venv\Scripts\activate`
 
+On Windows: `.\venv\Scripts\activate`
 On Mac/Linux/Bash: `source venv/Scripts/activate`
 
 **Step 4: Set AWS Default Region**
-On Windows: `SET AWS_DEFAULT_REGION=us-east-2`
 
+On Windows: `SET AWS_DEFAULT_REGION=us-east-2`
 On Mac/Linux/Bash: `export AWS_DEFAULT_REGION=us-east-2`
 
 **Step 5: Launch the application**
