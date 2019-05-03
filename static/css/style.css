@@ -2,12 +2,12 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.navbar {
+.navbarCS218 {
   overflow: hidden;
   background-color: #333;
 }
 
-.navbar a {
+.navbarCS218 a {
   float: left;
   font-size: 16px;
   color: white;
@@ -16,12 +16,12 @@ body {
   text-decoration: none;
 }
 
-.dropdown {
+.dropdownCS218 {
   float: left;
   overflow: hidden;
 }
 
-.dropdown .dropbtn {
+.dropdownCS218 .dropbtn {
   font-size: 16px;  
   border: none;
   outline: none;
@@ -32,7 +32,7 @@ body {
   margin: 0;
 }
 
-.navbar a:hover, .dropdown:hover .dropbtn {
+.navbarCS218 a:hover, .dropdownCS218:hover .dropbtn {
   background-color: red;
 }
 
@@ -58,6 +58,6 @@ body {
   background-color: #ddd;
 }
 
-.dropdown:hover .dropdown-content {
+.dropdownCS218:hover .dropdown-content {
   display: block;
 }

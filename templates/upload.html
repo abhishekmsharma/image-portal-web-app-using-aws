@@ -13,17 +13,38 @@
 	<script src="{{ url_for('static', filename='aws-cognito-sdk.min.js') }}"></script>
     <script src="{{ url_for('static', filename='amazon-cognito-identity.min.js') }}"></script>
 	<script src="{{ url_for('static', filename='app.js') }}"></script>
-	<link rel="stylesheet" href="static/css/styles.css" />
+
+
+	<link rel="stylesheet" href="static/css/style.css" />
+	<link rel="stylesheet" href="static/css/home.css" />
 </head>
 <body>
-<div class="topnav">
-  <a class="active" href="/home">Home</a>
-  <a href="#news">News</a>
-  <a href="#contact">Contact</a>
-  <a href="#about">About</a>
-  <a id="myLink" href="#" onclick="signOut();return false;">Sign Out</a>
+
+<div class="navbarCS218">
+  <a href="/home">Home</a>
+  <a href="#news">About Team 6</a>
+  <div class="dropdownCS218">
+    <button class="dropbtn">Search Images 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="#">Link 1</a>
+      <a href="#">Link 2</a>
+      <a href="#">Link 3</a>
+    </div>
+  </div> 
+  <div style="float:right" class="dropdownCS218">
+  	<button class="dropbtn">Profile
+  		<i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+ 		<a id="myName" href="/upload" onclick="uploadImage();return false;">Name</a>
+ 		<a id="myLink" href="#" onclick="signOut();return false;">Sign Out</a>
+ 	</div>
+ </div>
+  <a style="float:right" id="myLink" href="/upload" onclick="uploadImage();return false;">Upload Image</a>
 </div>
-	<right><button onClick = 'signOut()'>Sign out</button></right>
+
 	<center>
 	<h1>Image Portal - CS 218<br><br>Upload Image</h1>
 	
