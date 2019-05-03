@@ -1,0 +1,97 @@
+<html>
+<head>
+	<link rel="stylesheet" href="static/css/home.css" />
+	<link rel="stylesheet" href="static/css/style.css" />
+</head>
+<body>
+<div class="navbar">
+  <a href="#home">Home</a>
+  <a href="#news">About</a>
+  <div class="dropdown">
+    <button class="dropbtn">Dropdown 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="#">Link 1</a>
+      <a href="#">Link 2</a>
+      <a href="#">Link 3</a>
+    </div>
+  </div> 
+  <div style="float:right" class="dropdown">
+  	<button class="dropbtn">Profile
+  		<i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+ 		<a id="myName" href="/upload" onclick="uploadImage();return false;">Name</a>
+ 		<a id="myLink" href="#" onclick="signOut();return false;">Sign Out</a>
+ 	</div>
+ </div>
+  <a style="float:right" id="myLink" href="/upload" onclick="uploadImage();return false;">Upload Image</a>
+</div>
+
+    
+
+<div class="row"> 
+  <div class="column">
+    <a href="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg"><img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto"></a>
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+  </div>
+  <div class="column">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+  </div> 
+  <div class="column">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+  </div>
+  <div class="column">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+    <img src="https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg" height="300" width="auto">
+  </div>
+</div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <script src="{{ url_for('static',
+            filename='aws-cognito-sdk.min.js') }}"></script>
+    <script src="{{ url_for('static',
+            filename='amazon-cognito-identity.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <script>
+        $(window).ready(setWelcome);
+    </script>
+</body>
+</html>

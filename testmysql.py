@@ -2,10 +2,10 @@ import mysql.connector
 from mysql.connector import errorcode
 
 config = {
-  'user': 'abhishek',
-  'password': '0000',
-  'host': '127.0.0.1',
-  'database': 'world',
+  'user': 'cs218rds',
+  'password': 'cs218rds',
+  'host': 'imageportaldb.czkcl5taihag.us-east-2.rds.amazonaws.com',
+  'database': 'imageportaldb',
   'raise_on_warnings': True
 }
 
@@ -20,14 +20,21 @@ except mysql.connector.Error as err:
     print("Database does not exist")
   else:
     print(err)
-  cnx.close()
 
+#cursor.execute("USE mysql") # select the database
+#cursor.execute("CREATE TABLE INFO(  Username VARCHAR(200),  Image_Caption VARCHAR(1000),  Image_URL VARCHAR(1000),  Upload_Date timestamp  )")
+#print(cursor.execute("SHOW TABLES"))
 
-query = ("SELECT Name, CountryCode FROM city")
+cursor.execute("CREATE DATABASE imageportaldb")
+
+'''
+cursor.execute("DROP DATABASE newdb")
+query = ("SELECT EmpID, Name FROM newdb.Employee3")
 
 cursor.execute(query)
 
-for Name, CountryCode in cursor:
-	print (Name, CountryCode)
+for EmpID, Name in cursor:
+	print (EmpID, Name)
+'''
 
 cnx.close()

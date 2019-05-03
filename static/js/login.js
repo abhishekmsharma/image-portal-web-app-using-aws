@@ -19,6 +19,7 @@ $(document).ready(function() {
 			else {
 				$('#successAlert').text(data.success).show();
 				$('#errorAlert').hide();
+				window.location.replace("/login");
 			}
 
 		});

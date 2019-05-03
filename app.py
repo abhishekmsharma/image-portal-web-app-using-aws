@@ -5,11 +5,17 @@ import json
 import mysql.connector
 from mysql.connector import errorcode
 import os
+import pymysql
+import datetime
+import boto3
+import mimetypes
 
 app = Flask(__name__)
 
 # all configurations
-os.environ['AWS_DEFAULT_REGION'] = "us-east-2"
+region_name = "us-east-2"
+
+os.environ['AWS_DEFAULT_REGION'] = region_name
 
 mySQLConfig = {
 	  'user': 'abhishek',
@@ -23,11 +29,30 @@ cognitoPoolID = 'us-east-2_4NELA3imh'
 cognitoAppClient = '3kl9bhn4bst09fbpo3mc2s3mo6'
 IAMAccessKey = 'AKIA2VGGOTNNR26EU3XB'
 IAMSecretyKey = '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'
+S3Bucket = 'imageportals3'
+
+
+rds_host  = 'imageportaldb.czkcl5taihag.us-east-2.rds.amazonaws.com'
+rds_name = 'cs218rds'
+rds_password = 'cs218rds'
+db_name = 'mysql'
+instance_name = 'imageportaldb'
+table_name = 'uploads'
+port = 3306
+
+
+S3Bucket = 'imageportals3'
+BUCKET_BASE_URL = "https://s3.us-east-2.amazonaws.com/imageportals3/"
 
 HEADER = {'Access-Control-Allow-Origin': '*'}
 
 def printf(s):
 	print(s, file=sys.stderr)
+
+@app.route('/home')
+def home():
+	printf ('In Home')
+	return render_template('home.html')
 
 @app.route('/')
 def index():
@@ -38,81 +63,129 @@ def index():
 def signUpPage():
 	return render_template('signup.html')
 
-@app.route('/signup', methods=['POST'])
-def signUpProcess():
-	printf ("In signup process")
-	values = dict()
-	email = request.form['email']
-	username = request.form['username']
-	password = request.form['password']
-	print (username, email, password, file=sys.stderr)
-
-	if username and email and password:
-		printf ("Creating object for " + username)
-		u = Cognito(cognitoPoolID,cognitoAppClient, access_key=IAMAccessKey, 
-			secret_key=IAMSecretyKey)
-
-		printf ("Cognito object created, trying to add user")
-		u.add_base_attributes(email=email)
-		try:
-			u.register(username, password)
-			values['success'] = "Account created for user " + username \
-			+ ". Click on the link below to verify your email."
-			printf ("Returning " + str(values))
-			return jsonify(values)
-		except Exception as e:
-			printf ("Signup failed, Error: " +  str(e))
-			values['error'] = str(e)
-			return jsonify(values)
+@app.route('/upload', methods=['GET'])
+def uploadPage():
+	return render_template('upload.html')
 
 
-	printf ("Returning " + values)
-	values['error'] = 'Please enter all the fields'
-	return jsonify(values)
+
+def uploadImageToPortal(username, image_caption, image_path):
+
+	# upload to S3
+	session = boto3.Session(aws_access_key_id=IAMAccessKey, 
+		aws_secret_access_key = IAMSecretyKey,
+		region_name = region_name)
+
+	s3 = session.resource('s3')
+	bucket = s3.Bucket(S3Bucket)
+
+	#file_mime = mimetypes.guess_type(image_path)[0] or 'binary/octet-stream'
+	file_mime = 'image/png'
+	# with open(image_path, 'rb') as data:
+	data = image_path
+	curr_time = str(datetime.datetime.now()).replace("-","").replace(" ",""). replace(":","").replace(".","")
+	image_name = "test_" + curr_time + ".jpg"
+	bucket.put_object(Key=image_name, Body=data, ContentType=file_mime, ACL='public-read')
+
+
+	# update in RDS
+	conn = pymysql.connect(rds_host, user=rds_name, passwd=rds_password, db=db_name, connect_timeout=5)
+
+	IMAGE_URL = BUCKET_BASE_URL + image_name
+	insert_query = "INSERT INTO {}.{} VALUES ('{}','{}','{}','{}')".format(instance_name,table_name,username,image_caption,IMAGE_URL,curr_time)
+	with conn.cursor() as cur:
+		cur.execute(insert_query)
+		conn.commit()
+
+	print ("Uploaded")
+
+@app.route('/upload', methods=['POST'])
+def uploadImage():
+	printf ("In upload method post")
+	printf (request.files['image'])
+	printf (request.files['image'].filename)
+	printf (request.files['image'].stream)
+	userName = request.form['username']
+	caption = request.form['image_caption']
+	stream = request.files['image'].stream
+	uploadImageToPortal(userName, caption, stream)
+	return "a"
+
+# @app.route('/signup', methods=['POST'])
+# def signUpProcess():
+# 	printf ("In signup process")
+# 	values = dict()
+# 	email = request.form['email']
+# 	username = request.form['username']
+# 	password = request.form['password']
+# 	print (username, email, password, file=sys.stderr)
+
+# 	if username and email and password:
+# 		printf ("Creating object for " + username)
+# 		u = Cognito(cognitoPoolID,cognitoAppClient, access_key=IAMAccessKey, 
+# 			secret_key=IAMSecretyKey)
+
+# 		printf ("Cognito object created, trying to add user")
+# 		u.add_base_attributes(email=email)
+# 		try:
+# 			u.register(username, password)
+# 			values['success'] = "Account created for user " + username \
+# 			+ ". Click on the link below to verify your email."
+# 			printf ("Returning " + str(values))
+# 			return jsonify(values)
+# 		except Exception as e:
+# 			printf ("Signup failed, Error: " +  str(e))
+# 			values['error'] = str(e)
+# 			return jsonify(values)
+
+
+# 	printf ("Returning " + values)
+# 	values['error'] = 'Please enter all the fields'
+# 	return jsonify(values)
 
 @app.route('/login', methods=['GET'])
 def loginPage():
 	return render_template('login.html')
 
-@app.route('/login', methods=['POST'])
-def loginProcess():
-	printf("In login process")
-	values = dict()
-	username = request.form['username']
-	password = request.form['password']
-	printf("Username: " + username)
-	u = Cognito(cognitoPoolID,cognitoAppClient, username=username)
-	try:
-		u.authenticate(password = password)
-		printf("---------Authenticated-------------")
-		values['success'] = "Logged in as " + username
-		printf("ID_Token: " + u.id_token)
-		return jsonify(values)
-	except Exception as e:
-		printf (e)
-		values['error'] = str(e)
-		return jsonify(values)
+# @app.route('/login', methods=['POST'])
+# def loginProcess():
+# 	printf("In login process")
+# 	values = dict()
+# 	username = request.form['username']
+# 	password = request.form['password']
+# 	printf("Username: " + username)
+# 	u = Cognito(cognitoPoolID,cognitoAppClient, username=username)
+# 	try:
+# 		u.authenticate(password = password)
+# 		printf("---------Authenticated-------------")
+# 		values['success'] = "Logged in as " + username
+# 		printf("ID_Token: " + u.id_token)
+# 		return jsonify(values)
+# 	except Exception as e:
+# 		printf (e)
+# 		values['error'] = str(e)
+# 		return jsonify(values)
 
 @app.route('/confirmUser')
 def confirmUser():
 	return render_template('confirmUser.html')
 
-@app.route('/confirmUser', methods=['POST'])
-def confirmUserProcess():
-	printf("In confirm process")
-	values = dict()
-	username = request.form['username']
-	code = request.form['code']
-	u = Cognito(cognitoPoolID, cognitoAppClient)
-	try:
-		u.confirm_sign_up(code,username=username)
-		printf("--------VERIFIED-----------")
-		values['success'] = "Your account is verified, you can now log in"
-		return jsonify(values)
-	except Exception as e:
-		printf (e)
-		values['error'] = str(e)
-		return jsonify(values)
+# @app.route('/confirmUser', methods=['POST'])
+# def confirmUserProcess():
+# 	printf("In confirm process")
+# 	values = dict()
+# 	username = request.form['username']
+# 	code = request.form['code']
+# 	u = Cognito(cognitoPoolID, cognitoAppClient)
+# 	try:
+# 		u.confirm_sign_up(code,username=username)
+# 		printf("--------VERIFIED-----------")
+# 		values['success'] = "Your account is verified, you can now log in"
+# 		return jsonify(values)
+# 	except Exception as e:
+# 		printf (e)
+# 		values['error'] = str(e)
+# 		return jsonify(values)
 
 @app.route('/check-status', methods=['GET'])
 def verify():
@@ -219,6 +292,10 @@ def getUsers():
 # 		values[Name] = CountryCode
 
 # 	return jsonify(values)
+
+
+
+
 
 if __name__ == '__main__':
 	app.run(port='319', debug=True)
