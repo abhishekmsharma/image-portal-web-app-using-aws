@@ -49,12 +49,45 @@ HEADER = {'Access-Control-Allow-Origin': '*'}
 def printf(s):
 	print(s, file=sys.stderr)
 
+def getImageData(user = None, keyword = None):
+	conn = pymysql.connect(rds_host, user=rds_name, passwd=rds_password, db=db_name, connect_timeout=5)
+	data = list()
+	query = ("SELECT * from {}.{} ORDER BY UPLOAD_DATE DESC".format(instance_name,table_name))
+	if user:
+		query = ("SELECT * from {}.{} WHERE USERNAME = '{}' ORDER BY UPLOAD_DATE DESC".format(instance_name,table_name, user))
+	if keyword:
+		query = ("SELECT * from {}.{} WHERE IMAGE_CAPTION LIKE '%{}%' ORDER BY UPLOAD_DATE DESC".format(instance_name,table_name, keyword))
+
+	with conn.cursor() as cur:
+		cur.execute(query)
+		for item in cur:
+			currImage = {'name': item[0], 'caption': item[1], 'image_url': item[2], 'date': item[3]}
+			data.append(currImage)
+			print (item, file=sys.stderr)
+
+	return data
+
 @app.route('/home')
 def home():
 	printf ('In Home')
-	return render_template('home.html')
 
-@app.route('/')
+	data = getImageData()
+
+	# data=[{'name': 'ABC', 'caption': 'Caption', 'date': '20 April', 'image_url':'https://i.ytimg.com/vi/xpudcGv-KX8/hqdefault.jpg'},
+	# {'name': 'ABC2', 'caption': 'Caption2', 'date': '30 April', 'image_url':'https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg'}]
+	return render_template('home.html', data = data)
+
+@app.route('/home/user/<string:username>')
+def getImagesForUser(username):
+	data = getImageData(user = username)
+	return render_template('home.html', data = data)
+
+@app.route('/home/keyword/<string:word>')
+def getImagesForKeyword(word):
+	data = getImageData(keyword = word)
+	return render_template('home.html', data = data)
+
+@app.route('/', methods=['GET'])
 def index():
 	printf ('In Home')
 	return render_template('login.html')
@@ -97,7 +130,7 @@ def uploadImageToPortal(username, image_caption, image_path):
 		cur.execute(insert_query)
 		conn.commit()
 
-	print ("Uploaded")
+	printf ("Uploaded image")
 
 @app.route('/upload', methods=['POST'])
 def uploadImage():
@@ -109,7 +142,7 @@ def uploadImage():
 	caption = request.form['image_caption']
 	stream = request.files['image'].stream
 	uploadImageToPortal(userName, caption, stream)
-	return "a"
+	return "Image uploaded"
 
 # @app.route('/signup', methods=['POST'])
 # def signUpProcess():

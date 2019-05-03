@@ -3,8 +3,8 @@ var CognitoUser = AmazonCognitoIdentity.CognitoUser;
 var AuthenticationDetails = AmazonCognitoIdentity.AuthenticationDetails;
 
 var poolData = {
-	UserPoolId : 'us-east-2_4NELA3imh',
-	ClientId : '3kl9bhn4bst09fbpo3mc2s3mo6'
+    UserPoolId : 'us-east-2_4NELA3imh',
+    ClientId : '3kl9bhn4bst09fbpo3mc2s3mo6'
 };
 
 
@@ -29,13 +29,13 @@ function login () {
 
     cognitoUser.authenticateUser(authenticationDetails, {
         onSuccess: function (result) {
-        	console.log("SUCCESS");
-        	// console.log(result.getAccessToken().getJwtToken());
+            console.log("SUCCESS");
+            // console.log(result.getAccessToken().getJwtToken());
             window.location.href = "/home";
         },
 
         onFailure: function(err) {
-        	console.log("FAIL");
+            console.log("FAIL");
             alert(err);
         }
 
@@ -113,22 +113,22 @@ function setWelcome () {
                 return;
             }
             if (session.isValid()) {
-            	console.log("session validity" + session.isValid());
-            	console.log(cognitoUser.signInUserSession.accessToken.jwtToken);
-            	$('#myName').html(cognitoUser.username);
+                console.log("session validity" + session.isValid());
+                console.log(cognitoUser.signInUserSession.accessToken.jwtToken);
+                $('#myName').html(cognitoUser.username);
             }
             else {
-            	console.log("here2");
-            	signOut();
+                console.log("here2");
+                signOut();
             }
             
         });
     }
     else {
-    	console.log("Here");
-    	signOut();
-    	// window.location.replace = "/login";
-    	// return
+        console.log("Here");
+        signOut();
+        // window.location.replace = "/login";
+        // return
     }
 
     // var url = "/api/protected_api";
@@ -138,7 +138,7 @@ function setWelcome () {
     // .done(function (data) {
     //     $('#data_from_protected_api').html(data);
     // });
-}	
+}   
 
 function upload () {
     var userPool = new CognitoUserPool(poolData);
@@ -151,42 +151,42 @@ function upload () {
                 return;
             }
             if (session.isValid()) {
-            	console.log("session validity" + session.isValid());
-            	console.log(cognitoUser.signInUserSession.accessToken.jwtToken);
-            	$('#username').html(cognitoUser.username);
+                console.log("session validity" + session.isValid());
+                console.log(cognitoUser.signInUserSession.accessToken.jwtToken);
+                $('#username').html(cognitoUser.username);
 
-            	var image_path = $('#image_path').val();
-            	var image_caption = $('#image_caption').val();
-            	console.log(image_path);
-            	console.log(image_caption);
-            	console.log(cognitoUser.username)
-            	var file = document.querySelector('input[type=file]').files[0];
-            	console.log(file)
+                var image_path = $('#image_path').val();
+                var image_caption = $('#image_caption').val();
+                console.log(image_path);
+                console.log(image_caption);
+                console.log(cognitoUser.username)
+                var file = document.querySelector('input[type=file]').files[0];
+                console.log(file)
 
-            	var formData = new FormData();
-				formData.append('image', file);
-				formData.append('username', cognitoUser.username);
-				formData.append('image_caption', image_caption)
-				$.ajax({
-				    type: 'POST',
-				    url: '/upload',
-				    data: formData,
-				    processData: false,  // prevent jQuery from converting the data
-				    contentType: false,  // prevent jQuery from overriding content type
-				    success: function(response) {
-				        alert(response);
-				    }
-				});
+                var formData = new FormData();
+                formData.append('image', file);
+                formData.append('username', cognitoUser.username);
+                formData.append('image_caption', image_caption)
+                $.ajax({
+                    type: 'POST',
+                    url: '/upload',
+                    data: formData,
+                    processData: false,  // prevent jQuery from converting the data
+                    contentType: false,  // prevent jQuery from overriding content type
+                    success: function(response) {
+                        alert(response);
+                    }
+                });
 
             }
             else {
-            	console.log("here2");
-            	signOut();
+                console.log("here2");
+                signOut();
             }
             
         });
     }
     else {
-    	signOut();
+        signOut();
     }
 }
