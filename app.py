@@ -9,6 +9,8 @@ import pymysql
 import datetime
 import boto3
 import mimetypes
+from datetime import datetime
+import re
 
 app = Flask(__name__)
 
@@ -61,7 +63,9 @@ def getImageData(user = None, keyword = None):
 	with conn.cursor() as cur:
 		cur.execute(query)
 		for item in cur:
-			currImage = {'name': item[0], 'caption': item[1], 'image_url': item[2], 'date': item[3]}
+			imgDate = item[3][:14]
+			date = datetime.strptime(imgDate, '%Y%m%d%H%M%S').strftime('%b %d %Y, %H:%M')
+			currImage = {'name': item[0], 'caption': item[1], 'image_url': item[2], 'date': date}
 			data.append(currImage)
 			print (item, file=sys.stderr)
 
@@ -70,22 +74,23 @@ def getImageData(user = None, keyword = None):
 @app.route('/home')
 def home():
 	printf ('In Home')
-
+	d = request.cookies
+	print(d, file=sys.stderr)
 	data = getImageData()
 
 	# data=[{'name': 'ABC', 'caption': 'Caption', 'date': '20 April', 'image_url':'https://i.ytimg.com/vi/xpudcGv-KX8/hqdefault.jpg'},
 	# {'name': 'ABC2', 'caption': 'Caption2', 'date': '30 April', 'image_url':'https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg'}]
-	return render_template('home.html', data = data)
+	return render_template('home.html', data = data, title="CS 218 Image Portal - Home Feed")
 
 @app.route('/home/user/<string:username>')
 def getImagesForUser(username):
 	data = getImageData(user = username)
-	return render_template('home.html', data = data)
+	return render_template('home.html', data = data, title="Search results for user - " + username)
 
 @app.route('/home/keyword/<string:word>')
 def getImagesForKeyword(word):
 	data = getImageData(keyword = word)
-	return render_template('home.html', data = data)
+	return render_template('home.html', data = data, title="Search results for keyword - " + word)
 
 @app.route('/', methods=['GET'])
 def index():
@@ -102,7 +107,7 @@ def uploadPage():
 
 
 
-def uploadImageToPortal(username, image_caption, image_path):
+def uploadImageToPortal(username, image_caption, image_path, image_name, image_extension):
 
 	# upload to S3
 	session = boto3.Session(aws_access_key_id=IAMAccessKey, 
@@ -116,15 +121,15 @@ def uploadImageToPortal(username, image_caption, image_path):
 	file_mime = 'image/png'
 	# with open(image_path, 'rb') as data:
 	data = image_path
-	curr_time = str(datetime.datetime.now()).replace("-","").replace(" ",""). replace(":","").replace(".","")
-	image_name = "test_" + curr_time + ".jpg"
-	bucket.put_object(Key=image_name, Body=data, ContentType=file_mime, ACL='public-read')
+	curr_time = str(datetime.now()).replace("-","").replace(" ",""). replace(":","").replace(".","")
+	img_name = image_name + "_" + curr_time + image_extension
+	bucket.put_object(Key=img_name, Body=data, ContentType=file_mime, ACL='public-read')
 
 
 	# update in RDS
 	conn = pymysql.connect(rds_host, user=rds_name, passwd=rds_password, db=db_name, connect_timeout=5)
 
-	IMAGE_URL = BUCKET_BASE_URL + image_name
+	IMAGE_URL = BUCKET_BASE_URL + img_name
 	insert_query = "INSERT INTO {}.{} VALUES ('{}','{}','{}','{}')".format(instance_name,table_name,username,image_caption,IMAGE_URL,curr_time)
 	with conn.cursor() as cur:
 		cur.execute(insert_query)
@@ -141,7 +146,11 @@ def uploadImage():
 	userName = request.form['username']
 	caption = request.form['image_caption']
 	stream = request.files['image'].stream
-	uploadImageToPortal(userName, caption, stream)
+	image_name = request.files['image'].filename
+	file_extension = image_name[image_name.rfind(".") : ]
+	image_name = image_name[ : image_name.rfind(".")]
+	image_name = re.sub(r'\W+', '', image_name)
+	uploadImageToPortal(userName, caption, stream, image_name, file_extension)
 	return "Image uploaded"
 
 # @app.route('/signup', methods=['POST'])

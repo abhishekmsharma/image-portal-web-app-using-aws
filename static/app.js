@@ -51,6 +51,13 @@ function signOut () {
     window.location.href = "/";
 }
 
+function search() {
+    var keyword = $('#keyword').val();
+    s = "/home/keyword/" + keyword;
+    console.log(s);
+    window.location.href = s;
+}
+
 function signup () {
     var username = $('#username').val();
     var password = $('#password').val();
@@ -105,7 +112,6 @@ function validate () {
 function setWelcome () {
     var userPool = new CognitoUserPool(poolData);
     var cognitoUser = userPool.getCurrentUser();
-
     if (cognitoUser != null) {
         cognitoUser.getSession(function(err, session) {
             if (err) {
@@ -113,9 +119,13 @@ function setWelcome () {
                 return;
             }
             if (session.isValid()) {
-                console.log("session validity" + session.isValid());
-                console.log(cognitoUser.signInUserSession.accessToken.jwtToken);
-                $('#myName').html(cognitoUser.username);
+                // console.log("Session validity: " + session.isValid());
+                // console.log(cognitoUser.signInUserSession.accessToken.jwtToken);
+                // // $('#myName').html(cognitoUser.username);
+                // console.log("Returning");
+                // return "A";
+                // console.log("Returning")
+                // return "A";
             }
             else {
                 console.log("here2");
@@ -125,11 +135,12 @@ function setWelcome () {
         });
     }
     else {
-        console.log("Here");
+        console.log("Her222222222e");
         signOut();
-        // window.location.replace = "/login";
-        // return
+        return;
     }
+    console.log("Here also");
+    return cognitoUser.username;
 
     // var url = "/api/protected_api";
 

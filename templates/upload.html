@@ -15,37 +15,46 @@
 	<script src="{{ url_for('static', filename='app.js') }}"></script>
 
 
-	<link rel="stylesheet" href="static/css/style.css" />
-	<link rel="stylesheet" href="static/css/home.css" />
+	<link rel="stylesheet" href="static/styles/style.css" />
+	<link rel="stylesheet" href="static/styles/home.css" />
 </head>
 <body>
-
     <script>
-        $(window).ready(setWelcome);
+        // $(window).ready(setWelcome);
+        var username = setWelcome();
     </script>
 <div class="navbarCS218">
-  <a href="/home">Home</a>
-  <a href="#news">About Team 6</a>
-  <div class="dropdownCS218">
-    <button class="dropbtn">Search Images 
-      <i class="fa fa-caret-down"></i>
-    </button>
-    <div class="dropdown-content">
-      <a href="#">Link 1</a>
-      <a href="#">Link 2</a>
-      <a href="#">Link 3</a>
-    </div>
-  </div> 
   <div style="float:right" class="dropdownCS218">
+
   	<button class="dropbtn">Profile
   		<i class="fa fa-caret-down"></i>
     </button>
     <div class="dropdown-content">
- 		<a id="myName" href="/upload" onclick="uploadImage();return false;">Name</a>
+ 		<a id="myName" href="#">Name</a>
+    <script>
+      $("#myName").text(username);
+      document.getElementById("myName").setAttribute("href","/home/user/" + username);
+    </script>
  		<a id="myLink" href="#" onclick="signOut();return false;">Sign Out</a>
  	</div>
+
  </div>
-  <a style="float:right" id="myLink" href="/upload" onclick="uploadImage();return false;">Upload Image</a>
+ <a class="tab" style="float:right" href="#about">About Team 6</a>
+  <a class="tab" style="float:right" id="myLink" href="/upload" onclick="uploadImage();return false;">Upload Image</a>
+  <a class="tab" style="float:right" href="/home">Home</a>
+  <div>
+    <form onsubmit="return false;">
+    <input type="text" class="searchbar" id="keyword" placeholder="Search" onsubmit='search()'>
+  </form>
+  <script>
+    document.getElementById('keyword').addEventListener('keypress', function(event) {
+        if (event.keyCode == 13) {
+            search();
+        }
+    });
+</script>
+  </div>
+
 </div>
 
 	<center>
@@ -54,14 +63,14 @@
 <div class="container">
 	<br><br><br><br>
 	<form onsubmit="return false;" class="form-inline" enctype="multipart/form-data">
-	  <div class="form-group">
+	  <div class="form-group ">
 	    <label class="sr-only" for="nameInput">Image</label>
 	    <input type="file" class="form-control" id="image_path" placeholder="Image" accept="image/*">
 	  </div>
 	  <br><br>
-	  <div class="form-group">
+	  <div class="form-group ">
 	    <label class="sr-only" for="nameInput">Image Caption</label>
-	    <input type="text" class="form-control" id="image_caption" placeholder="Enter a caption">
+	    <input type="text" width="30%" class="form-control" id="image_caption" placeholder="Enter a caption">
 	  </div>
 	  <br><br>
 	  <button type="submit" onClick = 'upload()' class="btn btn-default">Upload Image</button>

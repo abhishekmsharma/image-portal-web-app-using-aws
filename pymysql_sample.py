@@ -82,5 +82,5 @@ def getAllImages():
 	for item in cur:
 		print (item)
 
-uploadImage("anand","A cartoon", "uploads/shinchan.png")
+#uploadImage("anand","A cartoon", "uploads/shinchan.png")
 #getAllImages()
