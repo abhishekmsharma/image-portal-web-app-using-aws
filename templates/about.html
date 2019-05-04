@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>Image Portal - CS 218</title>
+	<title>About Team 6 | Image Portal - CS 218</title>
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
             crossorigin="anonymous"></script>
@@ -21,7 +21,8 @@
   <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/home.css') }}">
 </head>
 <body>
-    <script>
+
+	    <script>
         // $(window).ready(setWelcome);
         var username = setWelcome();
     </script>
@@ -60,61 +61,25 @@
   </div>
 
 </div>
-
-
-<div class="container">
-        <div class="row">
-        <div class="gallery col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <h1 class="gallery-title">{{ title }}</h1>
-        </div>
-        <br/>
-
-        
-          {% for item in data %}
-            <div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter hdpe">
-                <img id = 'myImg{{loop.index}}' src={{item.image_url}} class="myImg thumbnail img-responsive img-rounded center-bloc" height="350" width="auto" alt="{{item.caption}}">
-              <!-- The Modal -->
-              <div id="myModal" class="modal">
-                <span class="close">&times;</span>
-                <img class="modal-content" id="img01">
-                <div id="caption"></div>
-              </div>
-              <script>
-                  // Get the modal
-                  var modal = document.getElementById('myModal');
-
-                  // Get the image and insert it inside the modal - use its "alt" text as a caption
-                  var img = document.getElementById('myImg{{loop.index}}');
-                  var modalImg = document.getElementById("img01");
-                  var captionText = document.getElementById("caption");
-                  img.onclick = function(){
-                    modal.style.display = "block";
-                    modalImg.src = this.src;
-                    captionText.innerHTML = this.alt;
-                  }
-
-                  // Get the <span> element that closes the modal
-                  var span = document.getElementsByClassName("close")[0];
-
-                  // When the user clicks on <span> (x), close the modal
-                  span.onclick = function() { 
-                    modal.style.display = "none";
-                    console.log("Here")
-                  }
-              </script>
-                <b>Uploaded by:</b> <a href="/home/user/{{item.name}}">{{item.name}}</a><br>
-                <b>Caption:</b> {{item.caption}} <br>
-                <b>Uploaded on:</b> {{item.date}} <br>
-                <a href={{item.image_url}} target=_blank>View full size</a> <p></p>
-                <hr>
-            </div>
-          {% endfor %}
-
-        </div>
-    </div>
-</section>
-  
-
-    
-</body>
-</html>
+<center>
+	<h1>Image Portal - CS 218<br><br>About Team 6</h1>
+</center>
+<div class="row">
+<div class="col-xs-2"></div>
+	<div class="col-xs-5">
+		<h2>Members</h2>
+<h4>Abhishek Manoj Sharma</h4>
+<h4>Anand Vishwakarma</h4> 
+<h4>Rajeshwari Deepak Chandratre </h4><br><br>
+ </div>
+<div class="col-xs-5">
+<h2>Services Used:</h2>
+<h4>Amazon Elastic Compute Cloud (EC2)</h4>
+<h4>Amazon Cognito</h4> 
+<h4>Amazon Simple Storage Server (S3)</h4>
+<h4>Amazon Relational Database Services (RDS)</h4>
+<h4>AWS Elastic Beanstalk</h4>
+<h4>AWS Auto Scaling</h4>
+<h4>Amazon Elastic Load Balancing</h4>
+<h4></h4>
+</div>

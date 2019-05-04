@@ -110,6 +110,10 @@ def signUpPage():
 def uploadPage():
 	return render_template('upload.html')
 
+@application.route('/about', methods=['GET'])
+def aboutPage():
+	return render_template('about.html')
+
 
 
 def uploadImageToPortal(username, image_caption, image_path, image_name, image_extension):
