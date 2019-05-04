@@ -1,0 +1,14 @@
+<script src="{{ url_for('static', filename='aws-cognito-sdk.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='amazon-cognito-identity.min.js') }}"></script>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+
+
+<script>
+        var username = setWelcome();
+        if (username) {
+        	window.location.href = "/home";
+        }
+        else {
+        	signOut();
+        }
+</script>

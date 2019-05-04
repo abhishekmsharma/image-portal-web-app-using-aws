@@ -78,7 +78,6 @@ def getImageData(user = None, keyword = None):
 
 @application.route('/home')
 def home():
-	application.logger.info("Opened homepage")
 	d = request.cookies
 	print(d, file=sys.stderr)
 	data = getImageData()
@@ -101,17 +100,14 @@ def getImagesForKeyword(word):
 
 @application.route('/', methods=['GET'])
 def index():
-	application.logger.info("Opened login page")
-	return render_template('login.html')
+	return render_template('index.html')
 
 @application.route('/signup', methods=['GET'])
 def signUpPage():
-	application.logger.info("Opened signup page")
 	return render_template('signup.html')
 
 @application.route('/upload', methods=['GET'])
 def uploadPage():
-	application.logger.info("Opened upload page")
 	return render_template('upload.html')
 
 

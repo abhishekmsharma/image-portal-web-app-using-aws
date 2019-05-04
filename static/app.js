@@ -48,7 +48,7 @@ function signOut () {
     if (cognitoUser !== null) {
         cognitoUser.signOut();
     }
-    window.location.href = "/";
+    window.location.href = "/login";
 }
 
 function search() {
@@ -135,11 +135,9 @@ function setWelcome () {
         });
     }
     else {
-        console.log("Her222222222e");
         signOut();
         return;
     }
-    console.log("Here also");
     return cognitoUser.username;
 
     // var url = "/api/protected_api";

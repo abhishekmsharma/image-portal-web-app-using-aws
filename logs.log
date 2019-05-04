@@ -1,8 +1,0 @@
-[2019-05-03 23:43:24,996] {Line: 111} INFO - Opened signup page
-[2019-05-03 23:44:02,760] {Line: 83} INFO - Opened homepage
-[2019-05-03 23:44:09,947] {Line: 116} INFO - Opened upload page
-[2019-05-03 23:45:04,650] {Line: 122} INFO - abhishek initiated an image upload
-[2019-05-03 23:45:06,523] {Line: 138} INFO - Image successfully put to S3
-[2019-05-03 23:45:07,039] {Line: 149} INFO - Record added in RDS
-[2019-05-03 23:45:07,039] {Line: 151} INFO - abhishek's image upload completed. S3 link at https://s3.us-east-2.amazonaws.com/imageportals3/author_20190503234505445545.jpg
-[2019-05-03 23:45:15,668] {Line: 83} INFO - Opened homepage
