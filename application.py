@@ -9,8 +9,17 @@ import boto3
 import mimetypes
 from datetime import datetime
 import re
+import logging
+from logging.handlers import RotatingFileHandler
 
-app = Flask(__name__)
+application = Flask(__name__)
+
+handler = RotatingFileHandler('logs.log', maxBytes=10000, backupCount=1)
+formatter = logging.Formatter("[%(asctime)s] {Line: %(lineno)d} %(levelname)s - %(message)s")
+handler.setFormatter(formatter)
+application.logger.setLevel(logging.INFO)
+application.logger.addHandler(handler)
+
 
 # all configurations
 region_name = "us-east-2"
@@ -44,8 +53,6 @@ port = 3306
 S3Bucket = 'imageportals3'
 BUCKET_BASE_URL = "https://s3.us-east-2.amazonaws.com/imageportals3/"
 
-HEADER = {'Access-Control-Allow-Origin': '*'}
-
 def printf(s):
 	print(s, file=sys.stderr)
 
@@ -69,9 +76,9 @@ def getImageData(user = None, keyword = None):
 
 	return data
 
-@app.route('/home')
+@application.route('/home')
 def home():
-	printf ('In Home')
+	application.logger.info("Opened homepage")
 	d = request.cookies
 	print(d, file=sys.stderr)
 	data = getImageData()
@@ -80,33 +87,37 @@ def home():
 	# {'name': 'ABC2', 'caption': 'Caption2', 'date': '30 April', 'image_url':'https://s3.us-east-2.amazonaws.com/imageportals3/test_20190503044533579898.jpg'}]
 	return render_template('home.html', data = data, title="CS 218 Image Portal - Home Feed")
 
-@app.route('/home/user/<string:username>')
+@application.route('/home/user/<string:username>')
 def getImagesForUser(username):
+	application.logger.info("Searching images for user: " + username)
 	data = getImageData(user = username)
 	return render_template('home.html', data = data, title="Search results for user - " + username)
 
-@app.route('/home/keyword/<string:word>')
+@application.route('/home/keyword/<string:word>')
 def getImagesForKeyword(word):
+	application.logger.info("Searching images for keyword: " + word)
 	data = getImageData(keyword = word)
 	return render_template('home.html', data = data, title="Search results for keyword - " + word)
 
-@app.route('/', methods=['GET'])
+@application.route('/', methods=['GET'])
 def index():
-	printf ('In Home')
+	application.logger.info("Opened login page")
 	return render_template('login.html')
 
-@app.route('/signup', methods=['GET'])
+@application.route('/signup', methods=['GET'])
 def signUpPage():
+	application.logger.info("Opened signup page")
 	return render_template('signup.html')
 
-@app.route('/upload', methods=['GET'])
+@application.route('/upload', methods=['GET'])
 def uploadPage():
+	application.logger.info("Opened upload page")
 	return render_template('upload.html')
 
 
 
 def uploadImageToPortal(username, image_caption, image_path, image_name, image_extension):
-
+	application.logger.info(username +" initiated an image upload")
 	# upload to S3
 	session = boto3.Session(aws_access_key_id=IAMAccessKey, 
 		aws_secret_access_key = IAMSecretyKey,
@@ -122,7 +133,7 @@ def uploadImageToPortal(username, image_caption, image_path, image_name, image_e
 	curr_time = str(datetime.now()).replace("-","").replace(" ",""). replace(":","").replace(".","")
 	img_name = image_name + "_" + curr_time + image_extension
 	bucket.put_object(Key=img_name, Body=data, ContentType=file_mime, ACL='public-read')
-
+	application.logger.info("Image successfully put to S3")
 
 	# update in RDS
 	conn = pymysql.connect(rds_host, user=rds_name, passwd=rds_password, db=db_name, connect_timeout=5)
@@ -133,9 +144,11 @@ def uploadImageToPortal(username, image_caption, image_path, image_name, image_e
 		cur.execute(insert_query)
 		conn.commit()
 
-	printf ("Uploaded image")
+	application.logger.info("Record added in RDS")
 
-@app.route('/upload', methods=['POST'])
+	application.logger.info(username + "'s image upload completed. S3 link at " + IMAGE_URL)
+
+@application.route('/upload', methods=['POST'])
 def uploadImage():
 	printf ("In upload method post")
 	printf (request.files['image'])
@@ -183,7 +196,7 @@ def uploadImage():
 # 	values['error'] = 'Please enter all the fields'
 # 	return jsonify(values)
 
-@app.route('/login', methods=['GET'])
+@application.route('/login', methods=['GET'])
 def loginPage():
 	return render_template('login.html')
 
@@ -206,7 +219,7 @@ def loginPage():
 # 		values['error'] = str(e)
 # 		return jsonify(values)
 
-@app.route('/confirmUser')
+@application.route('/confirmUser')
 def confirmUser():
 	return render_template('confirmUser.html')
 
@@ -227,9 +240,9 @@ def confirmUser():
 # 		values['error'] = str(e)
 # 		return jsonify(values)
 
-@app.route('/check-status', methods=['GET'])
+@application.route('/check-status', methods=['GET'])
 def verify():
-	return 'service is up'
+	return 'Service running!'
 	
 # @app.route('/welcome/<string:username>', methods=['GET'])
 # def welcome(username):
@@ -275,7 +288,7 @@ def verify():
 # 	return jsonify({'error' : 'Missing data!'})
 # 	return json.dumps(values)
 
-@app.route('/users', methods=['GET'])
+@application.route('/users', methods=['GET'])
 def getUsers():
 
 	try:
@@ -338,4 +351,4 @@ def getUsers():
 
 
 if __name__ == '__main__':
-	app.run(port='319', debug=True)
+	application.run(debug=True)

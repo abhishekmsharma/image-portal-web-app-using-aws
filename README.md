@@ -24,4 +24,4 @@ Download Visual CPP Build Tools: https://download.microsoft.com/download/5/f/7/5
 
 **Step 5: Open the application in browser**
 
-Visit [http://127.0.0.1:319/](http://127.0.0.1:319/)  in browser to run the app
+Visit [http://127.0.0.1:5000/](http://127.0.0.1:5000/)  in browser to run the app
