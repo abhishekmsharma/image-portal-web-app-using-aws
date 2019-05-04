@@ -2,8 +2,6 @@ from flask import Flask, request, Response, render_template, jsonify, redirect, 
 from warrant import Cognito
 import sys
 import json
-import mysql.connector
-from mysql.connector import errorcode
 import os
 import pymysql
 import datetime
