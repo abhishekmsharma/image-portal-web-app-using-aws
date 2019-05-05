@@ -53,7 +53,7 @@ function signOut () {
 
 function search() {
     var keyword = $('#keyword').val();
-    keyword = keyword.trim()
+    keyword = keyword.trim().replace("#","");
     console.log("Searching by keyword ", keyword.trim())
     if (keyword == "") {
         console.log("Blank search")
