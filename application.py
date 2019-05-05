@@ -10,7 +10,6 @@ import re
 import logging
 from logging.handlers import RotatingFileHandler
 import configparser
-import sys
 
 # setting up Flask application
 application = Flask(__name__)
@@ -49,7 +48,6 @@ def getImageData(user = None, keyword = None):
 	query = ("SELECT * from {}.{} ORDER BY UPLOAD_DATE DESC".format(instance_name,table_name))
 	if user:
 		query = ("SELECT * from {}.{} WHERE USERNAME = '{}' ORDER BY UPLOAD_DATE DESC".format(instance_name,table_name, user))
-	print ("Keyword", keyword, file=sys.stderr)
 	if keyword:
 		query = ("SELECT * from {}.{} WHERE IMAGE_CAPTION LIKE '%{}%' ORDER BY UPLOAD_DATE DESC".format(instance_name,table_name, keyword))
 
@@ -151,7 +149,6 @@ def confirmUser():
 
 @application.route('/check-status', methods=['GET'])
 def verify():
-
 	return 'Service running: ' + str(datetime.now())
 	
 
