@@ -20,7 +20,7 @@ Download Visual CPP Build Tools: https://download.microsoft.com/download/5/f/7/5
 
 **Step 4: Launch the application**
 
-    python app.py
+    python application.py
 
 **Step 5: Open the application in browser**
 
