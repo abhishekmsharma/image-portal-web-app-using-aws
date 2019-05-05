@@ -53,9 +53,16 @@ function signOut () {
 
 function search() {
     var keyword = $('#keyword').val();
-    s = "/home/keyword/" + keyword;
-    console.log(s);
-    window.location.href = s;
+    keyword = keyword.trim()
+    console.log("Searching by keyword ", keyword.trim())
+    if (keyword == "") {
+        console.log("Blank search")
+    }
+    else {
+        s = "/home/keyword/" + keyword;
+        console.log(s);
+        window.location.href = s;
+    }
 }
 
 function signup () {
@@ -81,7 +88,7 @@ function signup () {
             return;
         }
         cognitoUser = result.user;
-        console.log('user name is ' + cognitoUser.getUsername());
+        console.log('User name is ' + cognitoUser.getUsername());
         window.location.href = "/confirmUser";
     });
 }
@@ -104,12 +111,11 @@ function validate () {
             alert(err);
             return;
         }
-        console.log('call result: ' + result);
         window.location.href = "/login";
     });
 }
 
-function setWelcome () {
+function checkSession () {
     var userPool = new CognitoUserPool(poolData);
     var cognitoUser = userPool.getCurrentUser();
     if (cognitoUser != null) {
@@ -118,17 +124,8 @@ function setWelcome () {
                 alert(err);
                 return;
             }
-            if (session.isValid()) {
-                // console.log("Session validity: " + session.isValid());
-                // console.log(cognitoUser.signInUserSession.accessToken.jwtToken);
-                // // $('#myName').html(cognitoUser.username);
-                // console.log("Returning");
-                // return "A";
-                // console.log("Returning")
-                // return "A";
-            }
-            else {
-                console.log("here2");
+            if (!session.isValid()) {
+                console.log("User not authorized");
                 signOut();
             }
             
@@ -139,14 +136,6 @@ function setWelcome () {
         return;
     }
     return cognitoUser.username;
-
-    // var url = "/api/protected_api";
-
-    // $.post(url, {'access_token':
-    //     cognitoUser.signInUserSession.accessToken.jwtToken})
-    // .done(function (data) {
-    //     $('#data_from_protected_api').html(data);
-    // });
 }   
 
 function upload () {
@@ -160,17 +149,11 @@ function upload () {
                 return;
             }
             if (session.isValid()) {
-                console.log("session validity" + session.isValid());
-                console.log(cognitoUser.signInUserSession.accessToken.jwtToken);
                 $('#username').html(cognitoUser.username);
 
                 var image_path = $('#image_path').val();
                 var image_caption = $('#image_caption').val();
-                console.log(image_path);
-                console.log(image_caption);
-                console.log(cognitoUser.username)
                 var file = document.querySelector('input[type=file]').files[0];
-                console.log(file)
 
                 var formData = new FormData();
                 formData.append('image', file);
@@ -180,8 +163,8 @@ function upload () {
                     type: 'POST',
                     url: '/upload',
                     data: formData,
-                    processData: false,  // prevent jQuery from converting the data
-                    contentType: false,  // prevent jQuery from overriding content type
+                    processData: false, 
+                    contentType: false, 
                     success: function(response) {
                         alert(response);
                     }
@@ -189,7 +172,7 @@ function upload () {
 
             }
             else {
-                console.log("here2");
+                console.log("Not authorized");
                 signOut();
             }
             
