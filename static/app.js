@@ -3,8 +3,8 @@ var CognitoUser = AmazonCognitoIdentity.CognitoUser;
 var AuthenticationDetails = AmazonCognitoIdentity.AuthenticationDetails;
 
 var poolData = {
-    UserPoolId : 'us-east-2_4NELA3imh',
-    ClientId : '3kl9bhn4bst09fbpo3mc2s3mo6'
+    UserPoolId : '<PUT_APPROPRIATE_VALUE_HERE>',
+    ClientId : '<PUT_APPROPRIATE_VALUE_HERE>'
 };
 
 
